@@ -56,24 +56,20 @@ public class FastLogger {
         return this.log(LogLevel.INFO, message);
     }
 
-    public FastLogger info(@Nullable Object message) {
-        return this.log(LogLevel.INFO, message);
+    public FastLogger info(@Nullable Object object, @Nullable Object... args) {
+        return this.log(LogLevel.INFO, parseFormat(object, args));
     }
 
-    public FastLogger warn(@Nullable Object message) {
-        return this.log(LogLevel.WARNING, message);
+    public FastLogger warn(@Nullable Object object, @Nullable Object... args) {
+        return this.log(LogLevel.WARNING, parseFormat(object, args));
     }
 
-    public FastLogger warning(@Nullable Object message) {
-        return this.log(LogLevel.WARNING, message);
+    public FastLogger severe(@Nullable Object object, @Nullable Object... args) {
+        return this.log(LogLevel.SEVERE, parseFormat(object, args));
     }
 
-    public FastLogger severe(@Nullable Object message) {
-        return this.log(LogLevel.SEVERE, message);
-    }
-
-    public FastLogger debug(@Nullable Object message) {
-        return this.log(LogLevel.DEBUG, message);
+    public FastLogger debug(@Nullable Object object, @Nullable Object... args) {
+        return this.log(LogLevel.DEBUG, parseFormat(object, args));
     }
 
     public FastLogger exception(Throwable e) {
@@ -82,6 +78,20 @@ public class FastLogger {
         }
 
         return this;
+    }
+
+    public static String parseFormat(@Nullable Object object, @Nullable Object... args) {
+        if (object == null) {
+            return "null";
+        } else {
+            String format = object.toString();
+
+            for (Object o : args) {
+                format = format.replaceFirst("{}", (o == null) ? "null" : o.toString());
+            }
+
+            return format;
+        }
     }
 
 }

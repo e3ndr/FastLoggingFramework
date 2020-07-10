@@ -78,7 +78,7 @@ public abstract class LogHandler {
         messageCache.add(new Message(level, line));
         wake();
     }
-    
+
     public static void close() {
         running = false;
     }
