@@ -83,14 +83,10 @@ public class FastLogger {
     public static String parseFormat(@Nullable Object object, @Nullable Object... args) {
         if (object == null) {
             return "null";
+        } else if ((args == null) || (args.length == 0)) {
+            return object.toString();
         } else {
-            String format = object.toString();
-
-            for (Object o : args) {
-                format = format.replaceFirst("{}", (o == null) ? "null" : o.toString());
-            }
-
-            return format;
+            return String.format(object.toString(), args);
         }
     }
 
