@@ -16,15 +16,15 @@ public class FastLogger {
     private @Getter String name;
 
     public FastLogger() {
-        this(FastLoggingFramework.getCallingClass().getSimpleName(), FastLoggingFramework.getDefautLevel());
+        this(FastLoggingFramework.getCallingClass().getSimpleName(), FastLoggingFramework.getDefaultLevel());
     }
 
     public FastLogger(@NonNull Class<?> clazz) {
-        this(clazz, FastLoggingFramework.getDefautLevel());
+        this(clazz, FastLoggingFramework.getDefaultLevel());
     }
 
     public FastLogger(@NonNull String name) {
-        this(name, FastLoggingFramework.getDefautLevel());
+        this(name, FastLoggingFramework.getDefaultLevel());
     }
 
     public FastLogger(@NonNull LogLevel level) {
