@@ -82,13 +82,13 @@ public class FastLogger {
         }
     }
 
-    public static void log(@Nullable Object object, @Nullable Object... args) {
+    public static void logStatic(@Nullable Object object, @Nullable Object... args) {
         if (LogLevel.INFO.canLog(FastLoggingFramework.getDefaultLevel())) {
             LogHandler.log(LogLevel.INFO, FastLoggingFramework.getCallingClass().getSimpleName(), LoggingUtil.parseFormat(object, args));
         }
     }
 
-    public static void log(@NonNull LogLevel level, @Nullable Object object, @Nullable Object... args) {
+    public static void logStatic(@NonNull LogLevel level, @Nullable Object object, @Nullable Object... args) {
         if (level.canLog(FastLoggingFramework.getDefaultLevel())) {
             LogHandler.log(level, FastLoggingFramework.getCallingClass().getSimpleName(), LoggingUtil.parseFormat(object, args));
         }

@@ -13,7 +13,7 @@ import xyz.e3ndr.fastloggingframework.loggerimpl.NukkitLogHandler;
 import xyz.e3ndr.fastloggingframework.logging.LogLevel;
 
 public class FastLoggingFramework {
-    private static final @Getter String version = "1.4.0";
+    private static final @Getter String version = "1.4.1";
 
     private static @Getter @Setter @NonNull LogLevel defaultLevel = LogLevel.SEVERE;
     private static @Getter @NonNull LogHandler logHandler = new JansiLogHandler();
