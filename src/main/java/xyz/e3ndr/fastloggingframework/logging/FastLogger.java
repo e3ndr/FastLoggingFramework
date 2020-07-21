@@ -57,36 +57,40 @@ public class FastLogger {
     }
 
     public FastLogger info(@Nullable Object object, @Nullable Object... args) {
-        return this.log(LogLevel.INFO, parseFormat(object, args));
+        return this.log(LogLevel.INFO, LoggingUtil.parseFormat(object, args));
     }
 
     public FastLogger warn(@Nullable Object object, @Nullable Object... args) {
-        return this.log(LogLevel.WARNING, parseFormat(object, args));
+        return this.log(LogLevel.WARNING, LoggingUtil.parseFormat(object, args));
     }
 
     public FastLogger severe(@Nullable Object object, @Nullable Object... args) {
-        return this.log(LogLevel.SEVERE, parseFormat(object, args));
+        return this.log(LogLevel.SEVERE, LoggingUtil.parseFormat(object, args));
     }
 
     public FastLogger debug(@Nullable Object object, @Nullable Object... args) {
-        return this.log(LogLevel.DEBUG, parseFormat(object, args));
+        return this.log(LogLevel.DEBUG, LoggingUtil.parseFormat(object, args));
     }
 
-    public FastLogger exception(Throwable e) {
-        if (LogLevel.SEVERE.canLog(this.currentLevel)) {
-            LogHandler.exception(this.name, e);
+    public FastLogger exception(@NonNull Throwable e) {
+        return this.severe(e);
+    }
+
+    public static void logException(@NonNull Throwable e) {
+        if (LogLevel.SEVERE.canLog(FastLoggingFramework.getDefaultLevel())) {
+            LogHandler.log(LogLevel.SEVERE, FastLoggingFramework.getCallingClass().getSimpleName(), LoggingUtil.parseFormat(e));
         }
-
-        return this;
     }
 
-    public static String parseFormat(@Nullable Object object, @Nullable Object... args) {
-        if (object == null) {
-            return "null";
-        } else if ((args == null) || (args.length == 0)) {
-            return object.toString();
-        } else {
-            return String.format(object.toString(), args);
+    public static void log(@Nullable Object object, @Nullable Object... args) {
+        if (LogLevel.INFO.canLog(FastLoggingFramework.getDefaultLevel())) {
+            LogHandler.log(LogLevel.INFO, FastLoggingFramework.getCallingClass().getSimpleName(), LoggingUtil.parseFormat(object, args));
+        }
+    }
+
+    public static void log(@NonNull LogLevel level, @Nullable Object object, @Nullable Object... args) {
+        if (level.canLog(FastLoggingFramework.getDefaultLevel())) {
+            LogHandler.log(level, FastLoggingFramework.getCallingClass().getSimpleName(), LoggingUtil.parseFormat(object, args));
         }
     }
 

@@ -1,7 +1,5 @@
 package xyz.e3ndr.fastloggingframework;
 
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -27,7 +25,7 @@ public abstract class LogHandler {
     protected static boolean showingColor = true;
 
     static {
-        (new Thread() {
+        Thread t = new Thread() {
             @Override
             public void run() {
                 while (running) {
@@ -46,27 +44,15 @@ public abstract class LogHandler {
                     }
                 }
             }
-        }).start();
+        };
+
+        t.setDaemon(true);
+        t.start();
     }
 
     protected abstract void log(@NotNull LogLevel level, @NotNull String formatted);
 
     public void dispose() {}
-
-    public static void exception(@NonNull String name, @NonNull Throwable e) {
-        StringWriter sw = new StringWriter();
-        PrintWriter pw = new PrintWriter(sw);
-
-        e.printStackTrace(pw);
-
-        String out = sw.toString();
-
-        pw.close();
-        pw.flush();
-        sw.flush();
-
-        log(LogLevel.SEVERE, name, out.substring(0, out.length() - 2));
-    }
 
     public static void log(@NonNull LogLevel level, @NonNull String name, @Nullable Object message) {
         if (level == LogLevel.NONE) return;

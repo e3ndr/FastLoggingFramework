@@ -2,8 +2,6 @@ package xyz.e3ndr.fastloggingframework;
 
 import java.io.PrintStream;
 
-import org.jetbrains.annotations.Nullable;
-
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
@@ -12,11 +10,10 @@ import xyz.e3ndr.fastloggingframework.loggerimpl.BukkitLogHandler;
 import xyz.e3ndr.fastloggingframework.loggerimpl.BungeeLogHandler;
 import xyz.e3ndr.fastloggingframework.loggerimpl.JansiLogHandler;
 import xyz.e3ndr.fastloggingframework.loggerimpl.NukkitLogHandler;
-import xyz.e3ndr.fastloggingframework.logging.FastLogger;
 import xyz.e3ndr.fastloggingframework.logging.LogLevel;
 
 public class FastLoggingFramework {
-    private static final @Getter String version = "1.3.0";
+    private static final @Getter String version = "1.4.0";
 
     private static @Getter @Setter @NonNull LogLevel defaultLevel = LogLevel.SEVERE;
     private static @Getter @NonNull LogHandler logHandler = new JansiLogHandler();
@@ -29,18 +26,6 @@ public class FastLoggingFramework {
             new NukkitLogHandler();
         } else if (classExists("net.md_5.bungee.api.ProxyServer")) {
             new BungeeLogHandler();
-        }
-    }
-
-    public static void log(@Nullable Object object, @Nullable Object... args) {
-        if (LogLevel.INFO.canLog(defaultLevel)) {
-            LogHandler.log(LogLevel.INFO, getCallingClass().getSimpleName(), FastLogger.parseFormat(object, args));
-        }
-    }
-
-    public static void log(LogLevel level, @Nullable Object object, @Nullable Object... args) {
-        if (level.canLog(defaultLevel)) {
-            LogHandler.log(level, getCallingClass().getSimpleName(), FastLogger.parseFormat(object, args));
         }
     }
 
