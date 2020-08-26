@@ -5,7 +5,6 @@ import java.util.Collections;
 import java.util.List;
 
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -19,13 +18,14 @@ import xyz.e3ndr.fastloggingframework.logging.LogLevel;
 @Setter
 @Accessors(chain = true)
 public abstract class LogHandler {
-    private static boolean running = true;
     private static List<Message> messageCache = Collections.synchronizedList(new ArrayList<>());
+    private static boolean running = true;
+    private static Thread thread;
 
     protected static boolean showingColor = true;
 
     static {
-        Thread t = new Thread() {
+        thread = new Thread() {
             @Override
             public void run() {
                 while (running) {
@@ -46,18 +46,18 @@ public abstract class LogHandler {
             }
         };
 
-        t.setDaemon(true);
-        t.start();
+        thread.setDaemon(true);
+        thread.start();
     }
 
     protected abstract void log(@NotNull LogLevel level, @NotNull String formatted);
 
     public void dispose() {}
 
-    public static void log(@NonNull LogLevel level, @NonNull String name, @Nullable Object message) {
+    public static void log(@NonNull LogLevel level, @NonNull String name, @NonNull String message) {
         if (level == LogLevel.NONE) return;
 
-        String line = String.format("&7[%s&7] [%s&7]&7%s %s&r", level.toString(), name, level.getTextColor(), message.toString());
+        String line = String.format("&7[%s&7] [%s&7]&7%s %s&r", level.toString(), name, level.getTextColor(), message);
 
         line = showingColor ? LogColor.translateAlternateCodes(line) : LogColor.strip(line);
 
@@ -67,6 +67,10 @@ public abstract class LogHandler {
 
     public static void close() {
         running = false;
+        wake();
+        try {
+            thread.join();
+        } catch (InterruptedException e) {}
     }
 
     @AllArgsConstructor
