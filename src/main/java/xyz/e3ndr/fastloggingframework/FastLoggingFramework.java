@@ -13,9 +13,8 @@ import xyz.e3ndr.fastloggingframework.logging.LogLevel;
 import xyz.e3ndr.fastloggingframework.logging.LoggingUtil;
 
 public class FastLoggingFramework {
+    private static final @Getter PrintStream defautSystemOut = System.out;
     private static final @Getter String version = "1.5.0";
-
-    private static final @Getter @NonNull PrintStream defautSystemOut = System.out;
 
     private static @Getter @Setter @NonNull LogLevel defaultLevel = LogLevel.SEVERE;
     private static @Getter @NonNull LogHandler logHandler = new JansiLogHandler();
