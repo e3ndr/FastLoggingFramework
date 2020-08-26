@@ -28,7 +28,8 @@ Maven
         <dependency>
             <groupId>com.github.e3ndr</groupId>
             <artifactId>FastLoggingFramework</artifactId>
-            <version>1.1.0</version>
+            <version>1.5.0</version>
+            <scope>compile</scope>
         </dependency>
     </dependencies>
 ```
