@@ -11,7 +11,7 @@ FastLogger log = new FastLogger(); // Automatically gets the name of the calling
 log.info("This is an info message!"); // Only if LogLevel >= INFO
 log.warn("This is a warning!"); // Only if LogLevel >= WARNING
 log.severe("This is a severe message!"); // Only if LogLevel >= SEVERE
-log.severe("This is a debug message!"); // Only if LogLevel >= DEBUG
+log.debug("This is a debug message!"); // Only if LogLevel >= DEBUG
 log.exception(new Exception()); // Only if LogLevel >= SEVERE
 ```  
   
