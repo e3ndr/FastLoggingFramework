@@ -27,6 +27,18 @@ public class LoggingUtil {
         return Class.forName(Thread.currentThread().getStackTrace()[3].getClassName());
     }
 
+    @SneakyThrows
+    public static String getCaller() {
+        StackTraceElement element = Thread.currentThread().getStackTrace()[3];
+
+        String method = element.getMethodName();
+        String clazz = element.getClassName();
+        String file = element.getFileName();
+        int line = element.getLineNumber();
+
+        return String.format("%s.%s(%s:%d)", clazz, method, file, line);
+    }
+
     public static boolean classExists(String name) {
         try {
             Class.forName(name);

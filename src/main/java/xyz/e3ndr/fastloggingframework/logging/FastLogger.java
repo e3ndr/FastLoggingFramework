@@ -52,24 +52,64 @@ public class FastLogger {
         return this.log(LogLevel.INFO, "");
     }
 
-    public FastLogger println(@Nullable Object message) {
-        return this.log(LogLevel.INFO, LoggingUtil.parseFormat(message));
-    }
-
     public FastLogger info(@Nullable Object object, @Nullable Object... args) {
-        return this.log(LogLevel.INFO, LoggingUtil.parseFormat(object, args));
+        if (LogLevel.INFO.canLog(this.currentLevel)) {
+            LogHandler.log(LogLevel.INFO, this.name, LoggingUtil.parseFormat(object, args));
+        }
+
+        return this;
     }
 
     public FastLogger warn(@Nullable Object object, @Nullable Object... args) {
-        return this.log(LogLevel.WARNING, LoggingUtil.parseFormat(object, args));
+        if (LogLevel.WARNING.canLog(this.currentLevel)) {
+            LogHandler.log(LogLevel.WARNING, this.name, LoggingUtil.parseFormat(object, args));
+        }
+
+        return this;
     }
 
     public FastLogger severe(@Nullable Object object, @Nullable Object... args) {
-        return this.log(LogLevel.SEVERE, LoggingUtil.parseFormat(object, args));
+        if (LogLevel.SEVERE.canLog(this.currentLevel)) {
+            LogHandler.log(LogLevel.SEVERE, this.name, LoggingUtil.parseFormat(object, args));
+        }
+
+        return this;
     }
 
     public FastLogger debug(@Nullable Object object, @Nullable Object... args) {
-        return this.log(LogLevel.DEBUG, LoggingUtil.parseFormat(object, args));
+        if (LogLevel.DEBUG.canLog(this.currentLevel)) {
+            LogHandler.log(LogLevel.DEBUG, this.name, LoggingUtil.parseFormat(object, args));
+        }
+
+        return this;
+    }
+
+    public FastLogger entering(@Nullable Object... args) {
+        if (this.currentLevel == LogLevel.TRACE) {
+            StringBuilder sb = new StringBuilder();
+
+            for (Object object : args) {
+                sb.append(", ");
+
+                if (object instanceof Throwable) {
+                    sb.append(LoggingUtil.getExceptionStack((Throwable) object));
+                } else {
+                    sb.append(object);
+                }
+            }
+
+            LogHandler.log(LogLevel.TRACE, this.name, String.format("Entering %s with the following arguments: %s", LoggingUtil.getCaller(), sb.substring(2)));
+        }
+
+        return this;
+    }
+
+    public FastLogger exiting() {
+        if (this.currentLevel == LogLevel.TRACE) {
+            LogHandler.log(LogLevel.TRACE, this.name, String.format("Exiting %s.", LoggingUtil.getCaller()));
+        }
+
+        return this;
     }
 
     public FastLogger exception(@NonNull Throwable e) {

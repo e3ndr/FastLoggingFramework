@@ -31,22 +31,40 @@ public abstract class LogHandler {
                 while (running) {
                     synchronized (messageCache) {
                         try {
-                            messageCache.wait();
+                            messageCache.wait(5000);
                         } catch (InterruptedException e) {
                             e.printStackTrace();
                         }
                     }
 
-                    while (messageCache.size() != 0) {
-                        Message message = messageCache.get(0);
+                    int threadCount = 0;
+
+                    for (Thread thread : Thread.getAllStackTraces().keySet()) {
+                        if (!thread.isDaemon()) {
+                            String name = thread.getName();
+
+                            if (!name.equals("FastLoggingFramework Logging Thread") && !name.equals("DestroyJavaVM")) {
+                                threadCount++;
+                            }
+                        }
+                    }
+
+                    while (!messageCache.isEmpty()) {
+                        Message message = messageCache.remove(0);
+
                         FastLoggingFramework.getLogHandler().log(message.level, message.line);
-                        messageCache.remove(0);
+                    }
+
+                    if (threadCount == 0) {
+                        System.out.println("FastLoggingFramework has detected that it is the only running non daemon thread, it will now close inorder for the Java VM to exit.");
+                        running = false;
                     }
                 }
             }
         };
 
-        thread.setDaemon(true);
+        // thread.setDaemon(true);
+        thread.setName("FastLoggingFramework Logging Thread");
         thread.start();
     }
 

@@ -8,7 +8,8 @@ public enum LogLevel {
     INFO("INFO  ", 1, LogColor.LIGHT_BLUE, LogColor.DEFAULT),
     WARNING("WARN  ", 2, LogColor.LIGHT_YELLOW, LogColor.LIGHT_YELLOW),
     SEVERE("SEVERE", 3, LogColor.RED, LogColor.RED),
-    DEBUG("DEBUG ", 4, LogColor.GREEN, LogColor.DEFAULT);
+    DEBUG("DEBUG ", 4, LogColor.GREEN, LogColor.DEFAULT),
+    TRACE("TRACE ", 5, LogColor.LIGHT_AQUA, LogColor.DEFAULT);
 
     private String prettyString;
     private int intValue;
