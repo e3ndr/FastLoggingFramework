@@ -58,7 +58,19 @@ public abstract class LogHandler {
                     while (!messageCache.isEmpty()) {
                         Message message = messageCache.remove(0);
 
-                        FastLoggingFramework.getLogHandler().log(message.level, message.line);
+                        for (String line : message.lines) {
+                            String formattedLine = String.format(
+                                "&7[%s&7] [%s&r&7]%s %s&r",
+                                message.level.toString(),
+                                message.name,
+                                message.level.getTextColor(),
+                                line
+                            );
+
+                            formattedLine = showingColor ? LogColor.translateAlternateCodes(formattedLine) : LogColor.strip(formattedLine);
+
+                            FastLoggingFramework.getLogHandler().log(message.level, formattedLine);
+                        }
                     }
 
                     lockThread.stop();
@@ -76,22 +88,19 @@ public abstract class LogHandler {
     public static void log(@NonNull LogLevel level, @NonNull String name, @NonNull String message) {
         if (level == LogLevel.NONE) return;
 
-        String line = String.format("&7[%s&7] [%s&7]&7%s %s&r", level.toString(), name, level.getTextColor(), message);
-
-        line = showingColor ? LogColor.translateAlternateCodes(line) : LogColor.strip(line);
-
         // We use the lock thread to prevent the JVM from terminating while we're trying
         // to log the last messages.
         lock();
-
-        messageCache.add(new Message(level, line));
+        messageCache.add(new Message(level, name, message.split("\n")));
         wake();
     }
 
     @AllArgsConstructor
     private static class Message {
         private LogLevel level;
-        private String line;
+        private String name;
+        private String[] lines;
+
     }
 
     private static void wake() {
