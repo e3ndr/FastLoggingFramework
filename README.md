@@ -1,21 +1,43 @@
 # FastLoggingFramework
 A fast logging framework  
   
-Example  
+
+In order, the loglevels are:
+1) FATAL (Always logged)
+2) SEVERE
+3) WARNING
+4) INFO
+5) DEBUG
+6) TRACE
+  
+So a log level of WARNING, will show the following:
+ - FATAL (Always logged)
+ - SEVERE
+ - WARNING
+  
+  
+## Example  
 ```java
-// If you ever want to mute an application using FLF, this will override any LogLevel set in a logger. Any loggers generated without a specified level will absorb this one.
+// If you ever want to mute an application using FLF you can set the default level. 
+// Any loggers generated without a specified level will absorb this one.
 FastLoggingFramework.setDefaultLevel(LogLevel.NONE);
 
-FastLogger log = new FastLogger(); // Automatically gets the name of the calling class, you can of course pass a string and LogLevel
+// Automatically gets the name of the calling class, you can of course pass a string and LogLevel
+FastLogger log = new FastLogger();
 
-log.info("This is an info message!"); // Only if LogLevel >= INFO
-log.warn("This is a warning!"); // Only if LogLevel >= WARNING
-log.severe("This is a severe message!"); // Only if LogLevel >= SEVERE
-log.debug("This is a debug message!"); // Only if LogLevel >= DEBUG
-log.exception(new Exception()); // Only if LogLevel >= SEVERE
+// Enable logging for all levels.
+log.setLevel(LogLevel.ALL);
+
+log.fatal("Uh oh!");
+log.info("This is an info message!");
+log.warn("This is a warning!"); 
+log.severe("This is a severe message!");
+log.debug("This is a debug message!");
+log.trace("This is a trace message!");
+log.exception(new Exception());
 ```  
   
-Maven  
+## Maven  
 ```xml
     <repositories>
         <repository>
@@ -28,7 +50,7 @@ Maven
         <dependency>
             <groupId>com.github.e3ndr</groupId>
             <artifactId>FastLoggingFramework</artifactId>
-            <version>1.5.0</version>
+            <version>1.7.0</version>
             <scope>compile</scope>
         </dependency>
     </dependencies>
