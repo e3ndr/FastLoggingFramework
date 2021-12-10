@@ -40,75 +40,40 @@ public class FastLogger {
         this.name = name;
     }
 
-    public FastLogger log(@NonNull LogLevel level, @NonNull String message) {
+    /* -------------- */
+    /* Logging        */
+    /* -------------- */
+
+    public FastLogger log(@NonNull LogLevel level, @Nullable Object object, @Nullable Object... args) {
         if (level.canLog(this.currentLevel)) {
-            LogHandler.log(level, this.name, message);
+            LogHandler.log(level, this.name, LoggingUtil.parseFormat(object, args));
         }
 
         return this;
     }
+
+    // Info
 
     public FastLogger println() {
         return this.log(LogLevel.INFO, "");
     }
 
     public FastLogger info(@Nullable Object object, @Nullable Object... args) {
-        if (LogLevel.INFO.canLog(this.currentLevel)) {
-            LogHandler.log(LogLevel.INFO, this.name, LoggingUtil.parseFormat(object, args));
-        }
-
+        this.log(LogLevel.INFO, object, args);
         return this;
     }
+
+    // Warning
 
     public FastLogger warn(@Nullable Object object, @Nullable Object... args) {
-        if (LogLevel.WARNING.canLog(this.currentLevel)) {
-            LogHandler.log(LogLevel.WARNING, this.name, LoggingUtil.parseFormat(object, args));
-        }
-
+        this.log(LogLevel.WARNING, object, args);
         return this;
     }
+
+    // Severe
 
     public FastLogger severe(@Nullable Object object, @Nullable Object... args) {
-        if (LogLevel.SEVERE.canLog(this.currentLevel)) {
-            LogHandler.log(LogLevel.SEVERE, this.name, LoggingUtil.parseFormat(object, args));
-        }
-
-        return this;
-    }
-
-    public FastLogger debug(@Nullable Object object, @Nullable Object... args) {
-        if (LogLevel.DEBUG.canLog(this.currentLevel)) {
-            LogHandler.log(LogLevel.DEBUG, this.name, LoggingUtil.parseFormat(object, args));
-        }
-
-        return this;
-    }
-
-    public FastLogger entering(@Nullable Object... args) {
-        if (this.currentLevel == LogLevel.TRACE) {
-            StringBuilder sb = new StringBuilder();
-
-            for (Object object : args) {
-                sb.append(", ");
-
-                if (object instanceof Throwable) {
-                    sb.append(LoggingUtil.getExceptionStack((Throwable) object));
-                } else {
-                    sb.append(object);
-                }
-            }
-
-            LogHandler.log(LogLevel.TRACE, this.name, String.format("Entering %s with the following arguments: %s", LoggingUtil.getCaller(), sb.substring(2)));
-        }
-
-        return this;
-    }
-
-    public FastLogger exiting() {
-        if (this.currentLevel == LogLevel.TRACE) {
-            LogHandler.log(LogLevel.TRACE, this.name, String.format("Exiting %s.", LoggingUtil.getCaller()));
-        }
-
+        this.log(LogLevel.SEVERE, object, args);
         return this;
     }
 
@@ -116,16 +81,28 @@ public class FastLogger {
         return this.severe(e);
     }
 
+    // Debug Levels
+
+    public FastLogger debug(@Nullable Object object, @Nullable Object... args) {
+        this.log(LogLevel.DEBUG, object, args);
+        return this;
+    }
+
+    public FastLogger trace(@Nullable Object object, @Nullable Object... args) {
+        this.log(LogLevel.TRACE, object, args);
+        return this;
+    }
+
+    /* -------------- */
+    /* Static Logging */
+    /* -------------- */
+
     public static void logException(@Nullable Throwable e) {
-        if (LogLevel.SEVERE.canLog(FastLoggingFramework.getDefaultLevel())) {
-            LogHandler.log(LogLevel.SEVERE, LoggingUtil.getCallingClass().getSimpleName(), LoggingUtil.parseFormat(e));
-        }
+        logStatic(LogLevel.SEVERE, e);
     }
 
     public static void logStatic(@Nullable Object object, @Nullable Object... args) {
-        if (LogLevel.INFO.canLog(FastLoggingFramework.getDefaultLevel())) {
-            LogHandler.log(LogLevel.INFO, LoggingUtil.getCallingClass().getSimpleName(), LoggingUtil.parseFormat(object, args));
-        }
+        logStatic(LogLevel.INFO, object, args);
     }
 
     public static void logStatic(@NonNull LogLevel level, @Nullable Object object, @Nullable Object... args) {
