@@ -17,7 +17,7 @@ public class FastLoggingFramework {
     private static final @Getter String version = "1.6.0";
 
     private static @Getter @Setter @NonNull LogLevel defaultLevel = LogLevel.SEVERE;
-    private static @Getter @NonNull LogHandler logHandler = new JansiLogHandler();
+    private static @Getter @NonNull LogHandler logHandler = new AnsiLogHandler();
 
     static {
         if (LoggingUtil.classExists("org.bukkit.Bukkit")) {
