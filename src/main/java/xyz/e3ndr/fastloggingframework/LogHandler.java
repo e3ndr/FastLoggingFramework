@@ -69,7 +69,7 @@ public abstract class LogHandler {
 
                             formattedLine = showingColor ? LogColor.translateAlternateCodes(formattedLine) : LogColor.strip(formattedLine);
 
-                            FastLoggingFramework.getLogHandler().log(message.level, formattedLine);
+                            FastLoggingFramework.getLogHandler().log(message.name, message.level, formattedLine);
                         }
                     }
 
@@ -83,7 +83,7 @@ public abstract class LogHandler {
         thread.start();
     }
 
-    protected abstract void log(@NotNull LogLevel level, @NotNull String formatted);
+    protected abstract void log(@NotNull String name, @NotNull LogLevel level, @NotNull String formatted);
 
     public static void log(@NonNull LogLevel level, @NonNull String name, @NonNull String message) {
         if (level == LogLevel.NONE) return;

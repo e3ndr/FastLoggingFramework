@@ -10,7 +10,7 @@ import xyz.e3ndr.fastloggingframework.logging.LogLevel;
 public class AnsiLogHandler extends LogHandler {
 
     @Override
-    protected void log(@NotNull LogLevel level, @NotNull String formatted) {
+    protected void log(@NotNull String name, @NotNull LogLevel level, @NotNull String formatted) {
         ConsoleUtil.out.println(LogColor.translateToAnsi(formatted));
     }
 

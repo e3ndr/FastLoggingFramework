@@ -32,8 +32,8 @@ public class FileLogHandler extends AnsiLogHandler {
     }
 
     @Override
-    protected void log(@NotNull LogLevel level, @NotNull String formatted) {
-        super.log(level, formatted);
+    protected void log(@NotNull String name, @NotNull LogLevel level, @NotNull String formatted) {
+        super.log(name, level, formatted);
         this.writer.println(LogColor.strip(formatted));
     }
 
