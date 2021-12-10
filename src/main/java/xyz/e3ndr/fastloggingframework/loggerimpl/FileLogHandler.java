@@ -13,7 +13,7 @@ import xyz.e3ndr.fastloggingframework.FastLoggingFramework;
 import xyz.e3ndr.fastloggingframework.logging.LogColor;
 import xyz.e3ndr.fastloggingframework.logging.LogLevel;
 
-public class FileLogHandler extends JansiLogHandler {
+public class FileLogHandler extends AnsiLogHandler {
     private static final String HEADER = "-------------------- UTC %s --------------------";
 
     private PrintWriter writer;
@@ -35,16 +35,6 @@ public class FileLogHandler extends JansiLogHandler {
     protected void log(@NotNull LogLevel level, @NotNull String formatted) {
         super.log(level, formatted);
         this.writer.println(LogColor.strip(formatted));
-    }
-
-    @Override
-    public void finalize() {
-        this.dispose();
-    }
-
-    @Override
-    public void dispose() {
-        this.writer.close();
     }
 
 }

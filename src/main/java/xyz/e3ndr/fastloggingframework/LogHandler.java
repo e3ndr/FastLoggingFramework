@@ -19,33 +19,39 @@ import xyz.e3ndr.fastloggingframework.logging.LogLevel;
 @Accessors(chain = true)
 public abstract class LogHandler {
     private static List<Message> messageCache = Collections.synchronizedList(new ArrayList<>());
-    private static boolean running = true;
-    private static Thread thread;
 
     protected static boolean showingColor = true;
 
+    private static Thread lockThread = new Thread();
+
+    @SuppressWarnings("deprecation")
+    private static synchronized void lock() {
+        if (!lockThread.isAlive()) {
+            Thread oldThread = lockThread;
+
+            lockThread = new Thread(() -> {
+                try {
+                    Thread.sleep(Long.MAX_VALUE);
+                } catch (Exception ignored) {}
+            });
+
+            // This ensures we never have a time gap.
+            lockThread.start();
+            oldThread.stop();
+        }
+    }
+
     static {
-        thread = new Thread() {
+        Thread thread = new Thread() {
+            @SuppressWarnings("deprecation")
             @Override
             public void run() {
-                while (running) {
+                while (true) {
                     synchronized (messageCache) {
                         try {
-                            messageCache.wait(5000);
+                            messageCache.wait();
                         } catch (InterruptedException e) {
                             e.printStackTrace();
-                        }
-                    }
-
-                    int threadCount = 0;
-
-                    for (Thread thread : Thread.getAllStackTraces().keySet()) {
-                        if (!thread.isDaemon()) {
-                            String name = thread.getName();
-
-                            if (!name.equals("FastLoggingFramework Logging Thread") && !name.equals("DestroyJavaVM")) {
-                                threadCount++;
-                            }
                         }
                     }
 
@@ -55,22 +61,17 @@ public abstract class LogHandler {
                         FastLoggingFramework.getLogHandler().log(message.level, message.line);
                     }
 
-                    if (threadCount == 0) {
-                        System.out.println("FastLoggingFramework has detected that it is the only running non daemon thread, it will now close inorder for the Java VM to exit.");
-                        running = false;
-                    }
+                    lockThread.stop();
                 }
             }
         };
 
-        // thread.setDaemon(true);
+        thread.setDaemon(true);
         thread.setName("FastLoggingFramework Logging Thread");
         thread.start();
     }
 
     protected abstract void log(@NotNull LogLevel level, @NotNull String formatted);
-
-    public void dispose() {}
 
     public static void log(@NonNull LogLevel level, @NonNull String name, @NonNull String message) {
         if (level == LogLevel.NONE) return;
@@ -79,16 +80,12 @@ public abstract class LogHandler {
 
         line = showingColor ? LogColor.translateAlternateCodes(line) : LogColor.strip(line);
 
+        // We use the lock thread to prevent the JVM from terminating while we're trying
+        // to log the last messages.
+        lock();
+
         messageCache.add(new Message(level, line));
         wake();
-    }
-
-    public static void close() {
-        running = false;
-        wake();
-        try {
-            thread.join();
-        } catch (InterruptedException e) {}
     }
 
     @AllArgsConstructor
