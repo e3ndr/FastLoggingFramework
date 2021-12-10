@@ -52,6 +52,13 @@ public class FastLogger {
         return this;
     }
 
+    // Fatal
+
+    public FastLogger fatal(@Nullable Object object, @Nullable Object... args) {
+        this.log(LogLevel.FATAL, object, args);
+        return this;
+    }
+
     // Info
 
     public FastLogger println() {

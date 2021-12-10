@@ -5,6 +5,7 @@ import lombok.Getter;
 @Getter
 public enum LogLevel {
     // @formatter:off
+    FATAL(  "FATAL ", -1, LogColor.LIGHT_RED,    LogColor.LIGHT_RED   ), // Fatal is always logged.
     NONE(   "NONE  ", 0, LogColor.DEFAULT,      LogColor.DEFAULT     ),
     SEVERE( "SEVERE", 1, LogColor.RED,          LogColor.RED         ),
     WARNING("WARN  ", 2, LogColor.LIGHT_YELLOW, LogColor.LIGHT_YELLOW),
