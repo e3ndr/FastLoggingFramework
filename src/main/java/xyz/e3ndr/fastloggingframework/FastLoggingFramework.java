@@ -11,7 +11,7 @@ import xyz.e3ndr.fastloggingframework.logging.LogLevel;
 import xyz.e3ndr.fastloggingframework.logging.LoggingUtil;
 
 public class FastLoggingFramework {
-    private static @Getter @Setter @NonNull LogLevel defaultLevel = LogLevel.SEVERE;
+    private static @Getter @Setter @NonNull LogLevel defaultLevel = LogLevel.INFO;
     private static @Getter @NonNull LogHandler logHandler = new AnsiLogHandler();
 
     static {

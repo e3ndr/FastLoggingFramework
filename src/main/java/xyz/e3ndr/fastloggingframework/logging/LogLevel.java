@@ -4,12 +4,14 @@ import lombok.Getter;
 
 @Getter
 public enum LogLevel {
-    NONE("NONE  ", 0, LogColor.DEFAULT, LogColor.DEFAULT),
-    INFO("INFO  ", 1, LogColor.LIGHT_BLUE, LogColor.DEFAULT),
+    // @formatter:off
+    NONE(   "NONE  ", 0, LogColor.DEFAULT,      LogColor.DEFAULT     ),
+    SEVERE( "SEVERE", 1, LogColor.RED,          LogColor.RED         ),
     WARNING("WARN  ", 2, LogColor.LIGHT_YELLOW, LogColor.LIGHT_YELLOW),
-    SEVERE("SEVERE", 3, LogColor.RED, LogColor.RED),
-    DEBUG("DEBUG ", 4, LogColor.GREEN, LogColor.DEFAULT),
-    TRACE("TRACE ", 5, LogColor.LIGHT_AQUA, LogColor.DEFAULT);
+    INFO(   "INFO  ", 3, LogColor.LIGHT_BLUE,   LogColor.DEFAULT     ),
+    DEBUG(  "DEBUG ", 4, LogColor.GREEN,        LogColor.DEFAULT     ),
+    TRACE(  "TRACE ", 5, LogColor.LIGHT_AQUA,   LogColor.DEFAULT     );
+    // @formatter:on
 
     private String prettyString;
     private int intValue;
@@ -27,7 +29,11 @@ public enum LogLevel {
     }
 
     public boolean canLog(LogLevel currentLevel) {
-        return this.intValue <= currentLevel.intValue;
+        if (this.intValue == 0) {
+            return false;
+        } else {
+            return this.intValue <= currentLevel.intValue;
+        }
     }
 
 }
