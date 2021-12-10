@@ -10,7 +10,7 @@ public class StaticLogHandler extends LogHandler {
 
     @Override
     protected void log(@NotNull String name, @NotNull LogLevel level, @NotNull String formatted) {
-        System.out.println(LogColor.strip(formatted));
+        System.out.println(LogColor.translateToAnsi(formatted));
     }
 
 }

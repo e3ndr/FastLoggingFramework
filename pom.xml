@@ -132,9 +132,9 @@
 
 		<!-- Utilities -->
 		<dependency>
-			<groupId>com.github.e3ndr</groupId>
-			<artifactId>consoleutil</artifactId>
-			<version>9d51c20</version> <!-- BLEEDING -->
+			<groupId>io.github.alexarchambault.windows-ansi</groupId>
+			<artifactId>windows-ansi</artifactId>
+			<version>0.0.3</version>
 			<scope>compile</scope>
 		</dependency>
 	</dependencies>

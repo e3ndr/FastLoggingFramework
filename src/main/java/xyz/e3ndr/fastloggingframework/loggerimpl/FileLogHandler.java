@@ -13,7 +13,7 @@ import xyz.e3ndr.fastloggingframework.FastLoggingFramework;
 import xyz.e3ndr.fastloggingframework.logging.LogColor;
 import xyz.e3ndr.fastloggingframework.logging.LogLevel;
 
-public class FileLogHandler extends AnsiLogHandler {
+public class FileLogHandler extends StaticLogHandler {
     private static final String HEADER = "-------------------- UTC %s --------------------";
 
     private PrintWriter writer;
