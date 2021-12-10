@@ -60,8 +60,8 @@ public abstract class LogHandler {
 
                         for (String line : message.lines) {
                             String formattedLine = String.format(
-                                "&7[%s&7] [%s&r&7]%s %s&r",
-                                message.level.toString(),
+                                "&r&7[%s&7] [%s&r&7]%s %s&r",
+                                message.level.getPrettyString(),
                                 message.name,
                                 message.level.getTextColor(),
                                 line
