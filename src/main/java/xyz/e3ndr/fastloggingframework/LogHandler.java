@@ -23,60 +23,62 @@ public abstract class LogHandler {
     protected static boolean showingColor = true;
 
     private static Thread lockThread = new Thread();
+    private static Object lock = new Object();
 
-    @SuppressWarnings("deprecation")
     private static synchronized void lock() {
         if (!lockThread.isAlive()) {
-            Thread oldThread = lockThread;
-
             lockThread = new Thread(() -> {
                 try {
-                    Thread.sleep(Long.MAX_VALUE);
-                } catch (Exception ignored) {}
+                    synchronized (lock) {
+                        // This ensures we never have a time gap.
+                        lock.notifyAll();
+
+                        lock.wait();
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             });
 
-            // This ensures we never have a time gap.
+            // Automatically kills the last lock.
             lockThread.start();
-            oldThread.stop();
         }
     }
 
     static {
-        Thread thread = new Thread() {
-            @SuppressWarnings("deprecation")
-            @Override
-            public void run() {
-                while (true) {
-                    synchronized (messageCache) {
-                        try {
-                            messageCache.wait();
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
+        Thread thread = new Thread(() -> {
+            while (true) {
+                synchronized (messageCache) {
+                    try {
+                        messageCache.wait();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
                     }
+                }
 
-                    while (!messageCache.isEmpty()) {
-                        Message message = messageCache.remove(0);
+                while (!messageCache.isEmpty()) {
+                    Message message = messageCache.remove(0);
 
-                        for (String line : message.lines) {
-                            String formattedLine = String.format(
-                                "&r&7[%s&7] [%s&r&7]%s %s&r",
-                                message.level.getPrettyString(),
-                                message.name,
-                                message.level.getTextColor(),
-                                line
-                            );
+                    for (String line : message.lines) {
+                        String formattedLine = String.format(
+                            "&r&7[%s&7] [%s&r&7]%s %s&r",
+                            message.level.getPrettyString(),
+                            message.name,
+                            message.level.getTextColor(),
+                            line
+                        );
 
-                            formattedLine = showingColor ? LogColor.translateAlternateCodes(formattedLine) : LogColor.strip(formattedLine);
+                        formattedLine = showingColor ? LogColor.translateAlternateCodes(formattedLine) : LogColor.strip(formattedLine);
 
-                            FastLoggingFramework.getLogHandler().log(message.name, message.level, formattedLine);
-                        }
+                        FastLoggingFramework.getLogHandler().log(message.name, message.level, formattedLine);
                     }
+                }
 
-                    lockThread.stop();
+                synchronized (lock) {
+                    lock.notifyAll();
                 }
             }
-        };
+        });
 
         thread.setDaemon(true);
         thread.setName("FastLoggingFramework Logging Thread");
