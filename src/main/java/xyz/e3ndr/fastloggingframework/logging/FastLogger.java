@@ -109,7 +109,9 @@ public class FastLogger {
     }
 
     public static void logStatic(@Nullable Object object, @Nullable Object... args) {
-        logStatic(LogLevel.INFO, object, args);
+        if (LogLevel.INFO.canLog(FastLoggingFramework.getDefaultLevel())) {
+            LogHandler.log(LogLevel.INFO, LoggingUtil.getCallingClass().getSimpleName(), LoggingUtil.parseFormat(object, args));
+        }
     }
 
     public static void logStatic(@NonNull LogLevel level, @Nullable Object object, @Nullable Object... args) {
