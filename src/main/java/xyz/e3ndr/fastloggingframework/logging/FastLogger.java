@@ -16,7 +16,7 @@ public class FastLogger {
     private @Getter String name;
 
     public FastLogger() {
-        this(LoggingUtil.getCallingClass().getSimpleName(), FastLoggingFramework.getDefaultLevel());
+        this(LoggingUtil.getCallingClass(), FastLoggingFramework.getDefaultLevel());
     }
 
     public FastLogger(@NonNull Class<?> clazz) {
@@ -28,7 +28,7 @@ public class FastLogger {
     }
 
     public FastLogger(@NonNull LogLevel level) {
-        this(LoggingUtil.getCallingClass().getSimpleName(), level);
+        this(LoggingUtil.getCallingClass(), level);
     }
 
     public FastLogger(@NotNull Class<?> clazz, @NonNull LogLevel level) {
@@ -105,18 +105,20 @@ public class FastLogger {
     /* -------------- */
 
     public static void logException(@Nullable Throwable e) {
-        logStatic(LogLevel.SEVERE, e);
+        if (LogLevel.SEVERE.canLog(FastLoggingFramework.getDefaultLevel())) {
+            LogHandler.log(LogLevel.SEVERE, LoggingUtil.getCallingClass(), LoggingUtil.parseFormat(e));
+        }
     }
 
     public static void logStatic(@Nullable Object object, @Nullable Object... args) {
         if (LogLevel.INFO.canLog(FastLoggingFramework.getDefaultLevel())) {
-            LogHandler.log(LogLevel.INFO, LoggingUtil.getCallingClass().getSimpleName(), LoggingUtil.parseFormat(object, args));
+            LogHandler.log(LogLevel.INFO, LoggingUtil.getCallingClass(), LoggingUtil.parseFormat(object, args));
         }
     }
 
     public static void logStatic(@NonNull LogLevel level, @Nullable Object object, @Nullable Object... args) {
         if (level.canLog(FastLoggingFramework.getDefaultLevel())) {
-            LogHandler.log(level, LoggingUtil.getCallingClass().getSimpleName(), LoggingUtil.parseFormat(object, args));
+            LogHandler.log(level, LoggingUtil.getCallingClass(), LoggingUtil.parseFormat(object, args));
         }
     }
 

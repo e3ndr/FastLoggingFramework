@@ -52,20 +52,14 @@ public class LoggingUtil {
     }
 
     @SneakyThrows
-    public static Class<?> getCallingClass() {
-        return Class.forName(Thread.currentThread().getStackTrace()[3].getClassName());
-    }
+    public static String getCallingClass() {
+        String[] className = Thread.currentThread()
+            .getStackTrace()[3]
+                .getClassName()
+                .split("\\.");
 
-    @SneakyThrows
-    public static String getCaller() {
-        StackTraceElement element = Thread.currentThread().getStackTrace()[3];
-
-        String method = element.getMethodName();
-        String clazz = element.getClassName();
-        String file = element.getFileName();
-        int line = element.getLineNumber();
-
-        return String.format("%s.%s(%s:%d)", clazz, method, file, line);
+        // We then format subclasses with a . instead of $.
+        return className[className.length - 1].replace("$", ".");
     }
 
     public static boolean classExists(String name) {
@@ -91,6 +85,8 @@ public class LoggingUtil {
         sw.flush();
 
         return out.substring(0, out.length() - 2);
+            .substring(0, out.length() - 2)
+            .replace("\r", "");
     }
 
 }
