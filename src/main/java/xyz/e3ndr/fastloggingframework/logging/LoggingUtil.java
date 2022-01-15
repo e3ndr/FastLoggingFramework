@@ -84,7 +84,7 @@ public class LoggingUtil {
         pw.close();
         sw.flush();
 
-        return out.substring(0, out.length() - 2);
+        return out
             .substring(0, out.length() - 2)
             .replace("\r", "");
     }
