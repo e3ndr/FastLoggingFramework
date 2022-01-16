@@ -27,10 +27,12 @@ public class LoggingUtil {
             for (int argIndex = 0; argIndex < args.length; argIndex++) {
                 Object arg = args[argIndex];
 
-                if (arg instanceof Throwable) {
-                    args[argIndex] = getExceptionStack((Throwable) arg);
-                } else if (arg.getClass().isArray()) {
-                    args[argIndex] = arrayAsString(arg);
+                if (arg != null) {
+                    if (arg instanceof Throwable) {
+                        args[argIndex] = getExceptionStack((Throwable) arg);
+                    } else if (arg.getClass().isArray()) {
+                        args[argIndex] = arrayAsString(arg);
+                    }
                 }
             }
 
