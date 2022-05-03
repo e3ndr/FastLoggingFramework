@@ -13,7 +13,9 @@ import xyz.e3ndr.fastloggingframework.logging.LoggingUtil;
 
 public class FastLoggingFramework {
     private static @Getter @Setter @NonNull LogLevel defaultLevel = LogLevel.INFO;
-    private static @Getter @NonNull LogHandler logHandler = new StaticLogHandler();
+    private static @Getter @NonNull FastLogHandler logHandler = new StaticLogHandler();
+
+    private static @Getter @Setter boolean colorEnabled = true;
 
     static {
         try {
@@ -33,7 +35,7 @@ public class FastLoggingFramework {
         }
     }
 
-    public static void setLogHandler(@NonNull LogHandler newHandler) {
+    public static void setLogHandler(@NonNull FastLogHandler newHandler) {
         logHandler = newHandler;
     }
 
