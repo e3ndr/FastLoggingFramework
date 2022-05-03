@@ -4,10 +4,10 @@ import org.jetbrains.annotations.NotNull;
 
 import cn.nukkit.Server;
 import xyz.e3ndr.fastloggingframework.FastLoggingFramework;
-import xyz.e3ndr.fastloggingframework.LogHandler;
+import xyz.e3ndr.fastloggingframework.FastLogHandler;
 import xyz.e3ndr.fastloggingframework.logging.LogLevel;
 
-public class NukkitLogHandler extends LogHandler {
+public class NukkitLogHandler extends FastLogHandler {
 
     public NukkitLogHandler() {
         if (Server.getInstance() != null) {

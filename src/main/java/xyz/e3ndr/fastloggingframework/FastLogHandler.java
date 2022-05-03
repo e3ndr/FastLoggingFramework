@@ -17,10 +17,8 @@ import xyz.e3ndr.fastloggingframework.logging.LogLevel;
 @Getter
 @Setter
 @Accessors(chain = true)
-public abstract class LogHandler {
+public abstract class FastLogHandler {
     private static List<Message> messageCache = Collections.synchronizedList(new ArrayList<>());
-
-    protected static boolean showingColor = true;
 
     private static Thread lockThread = new Thread();
     private static Object lock = new Object();
@@ -68,7 +66,7 @@ public abstract class LogHandler {
                             line
                         );
 
-                        formattedLine = showingColor ? LogColor.translateAlternateCodes(formattedLine) : LogColor.strip(formattedLine);
+                        formattedLine = FastLoggingFramework.isColorEnabled() ? LogColor.translateAlternateCodes(formattedLine) : LogColor.strip(formattedLine);
 
                         FastLoggingFramework.getLogHandler().log(message.name, message.level, formattedLine);
                     }
