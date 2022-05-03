@@ -16,7 +16,7 @@ public class FastLogger {
     private @Getter String name;
 
     public FastLogger() {
-        this(LoggingUtil.getCallingClass(), FastLoggingFramework.getDefaultLevel());
+        this(StringUtil.getCallingClass(), FastLoggingFramework.getDefaultLevel());
     }
 
     public FastLogger(@NonNull Class<?> clazz) {
@@ -28,7 +28,7 @@ public class FastLogger {
     }
 
     public FastLogger(@NonNull LogLevel level) {
-        this(LoggingUtil.getCallingClass(), level);
+        this(StringUtil.getCallingClass(), level);
     }
 
     public FastLogger(@NotNull Class<?> clazz, @NonNull LogLevel level) {
@@ -46,7 +46,7 @@ public class FastLogger {
 
     public FastLogger log(@NonNull LogLevel level, @Nullable Object object, @Nullable Object... args) {
         if (level.canLog(this.currentLevel)) {
-            FastLogHandler.log(level, this.name, LoggingUtil.parseFormat(object, args));
+            FastLogHandler.log(level, this.name, StringUtil.parseFormat(object, args));
         }
 
         return this;
@@ -106,19 +106,19 @@ public class FastLogger {
 
     public static void logException(@Nullable Throwable e) {
         if (LogLevel.SEVERE.canLog(FastLoggingFramework.getDefaultLevel())) {
-            FastLogHandler.log(LogLevel.SEVERE, LoggingUtil.getCallingClass(), LoggingUtil.parseFormat(e));
+            FastLogHandler.log(LogLevel.SEVERE, StringUtil.getCallingClass(), StringUtil.parseFormat(e));
         }
     }
 
     public static void logStatic(@Nullable Object object, @Nullable Object... args) {
         if (LogLevel.INFO.canLog(FastLoggingFramework.getDefaultLevel())) {
-            FastLogHandler.log(LogLevel.INFO, LoggingUtil.getCallingClass(), LoggingUtil.parseFormat(object, args));
+            FastLogHandler.log(LogLevel.INFO, StringUtil.getCallingClass(), StringUtil.parseFormat(object, args));
         }
     }
 
     public static void logStatic(@NonNull LogLevel level, @Nullable Object object, @Nullable Object... args) {
         if (level.canLog(FastLoggingFramework.getDefaultLevel())) {
-            FastLogHandler.log(level, LoggingUtil.getCallingClass(), LoggingUtil.parseFormat(object, args));
+            FastLogHandler.log(level, StringUtil.getCallingClass(), StringUtil.parseFormat(object, args));
         }
     }
 

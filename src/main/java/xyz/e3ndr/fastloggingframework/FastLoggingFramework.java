@@ -9,7 +9,7 @@ import xyz.e3ndr.fastloggingframework.loggerimpl.BungeeLogHandler;
 import xyz.e3ndr.fastloggingframework.loggerimpl.NukkitLogHandler;
 import xyz.e3ndr.fastloggingframework.loggerimpl.StaticLogHandler;
 import xyz.e3ndr.fastloggingframework.logging.LogLevel;
-import xyz.e3ndr.fastloggingframework.logging.LoggingUtil;
+import xyz.e3ndr.fastloggingframework.logging.StringUtil;
 
 public class FastLoggingFramework {
     private static @Getter @Setter @NonNull LogLevel defaultLevel = LogLevel.INFO;
@@ -26,11 +26,11 @@ public class FastLoggingFramework {
             // For some reason windows-ansi will throw on success in an IDE, so we catch.
         }
 
-        if (LoggingUtil.classExists("org.bukkit.Bukkit")) {
+        if (StringUtil.classExists("org.bukkit.Bukkit")) {
             new BukkitLogHandler();
-        } else if (LoggingUtil.classExists("cn.nukkit.Server")) {
+        } else if (StringUtil.classExists("cn.nukkit.Server")) {
             new NukkitLogHandler();
-        } else if (LoggingUtil.classExists("net.md_5.bungee.api.ProxyServer")) {
+        } else if (StringUtil.classExists("net.md_5.bungee.api.ProxyServer")) {
             new BungeeLogHandler();
         }
     }

@@ -9,7 +9,7 @@ import org.jetbrains.annotations.Nullable;
 import lombok.NonNull;
 import lombok.SneakyThrows;
 
-public class LoggingUtil {
+public class StringUtil {
 
     public static String parseFormat(@Nullable Object object, @Nullable Object... args) {
         if (object == null) {
