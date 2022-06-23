@@ -129,13 +129,5 @@
 			<type>jar</type>
 			<scope>provided</scope>
 		</dependency>
-
-		<!-- Utilities -->
-		<dependency>
-			<groupId>io.github.alexarchambault.windows-ansi</groupId>
-			<artifactId>windows-ansi</artifactId>
-			<version>0.0.3</version>
-			<scope>compile</scope>
-		</dependency>
 	</dependencies>
 </project>
