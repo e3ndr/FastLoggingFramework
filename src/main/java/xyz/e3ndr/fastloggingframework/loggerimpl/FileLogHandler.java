@@ -9,6 +9,7 @@ import java.time.Instant;
 import org.jetbrains.annotations.NotNull;
 
 import lombok.NonNull;
+import xyz.e3ndr.fastloggingframework.FastLogHandler;
 import xyz.e3ndr.fastloggingframework.FastLoggingFramework;
 import xyz.e3ndr.fastloggingframework.logging.LogColor;
 import xyz.e3ndr.fastloggingframework.logging.LogLevel;
@@ -32,9 +33,9 @@ public class FileLogHandler extends StaticLogHandler {
     }
 
     @Override
-    protected void log(@NotNull String name, @NotNull LogLevel level, @NotNull String formatted) {
-        super.log(name, level, formatted);
-        this.writer.println(LogColor.strip(formatted));
+    protected void log(@NotNull String name, @NotNull LogLevel level, @NotNull String raw) {
+        super.log(name, level, raw);
+        this.writer.println(LogColor.strip(FastLogHandler.createFrontPorch(name, level, raw)));
     }
 
 }

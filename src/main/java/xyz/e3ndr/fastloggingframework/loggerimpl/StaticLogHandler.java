@@ -9,8 +9,8 @@ import xyz.e3ndr.fastloggingframework.logging.LogLevel;
 public class StaticLogHandler extends FastLogHandler {
 
     @Override
-    protected void log(@NotNull String name, @NotNull LogLevel level, @NotNull String formatted) {
-        System.out.println(LogColor.translateToAnsi(formatted));
+    protected void log(@NotNull String name, @NotNull LogLevel level, @NotNull String raw) {
+        System.out.println(LogColor.translateToAnsi(FastLogHandler.createFrontPorch(name, level, raw)));
     }
 
 }

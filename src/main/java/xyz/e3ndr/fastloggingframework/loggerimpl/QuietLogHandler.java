@@ -8,6 +8,6 @@ import xyz.e3ndr.fastloggingframework.logging.LogLevel;
 public class QuietLogHandler extends FastLogHandler {
 
     @Override
-    protected void log(@NotNull String name, @NotNull LogLevel level, @NotNull String formatted) {}
+    protected void log(@NotNull String name, @NotNull LogLevel level, @NotNull String raw) {}
 
 }

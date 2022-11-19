@@ -58,17 +58,7 @@ public abstract class FastLogHandler {
                     Message message = messageCache.remove(0);
 
                     for (String line : message.lines) {
-                        String formattedLine = String.format(
-                            "&r&7[%s&7] [%s&r&7]%s %s&r",
-                            message.level.getPrettyString(),
-                            message.name,
-                            message.level.getTextColor(),
-                            line
-                        );
-
-                        formattedLine = FastLoggingFramework.isColorEnabled() ? LogColor.translateAlternateCodes(formattedLine) : LogColor.strip(formattedLine);
-
-                        FastLoggingFramework.getLogHandler().log(message.name, message.level, formattedLine);
+                        FastLoggingFramework.getLogHandler().log(message.name, message.level, line);
                     }
                 }
 
@@ -83,7 +73,18 @@ public abstract class FastLogHandler {
         thread.start();
     }
 
-    protected abstract void log(@NotNull String name, @NotNull LogLevel level, @NotNull String formatted);
+    protected abstract void log(@NotNull String name, @NotNull LogLevel level, @NotNull String raw);
+
+    public static String createFrontPorch(@NotNull String name, @NotNull LogLevel level, @NotNull String raw) {
+        String formattedLine = String.format(
+            "&r&7[%s&7] [%s&r&7]&r%s ",
+            level.getPrettyString(),
+            name,
+            level.getTextColor()
+        );
+
+        return FastLoggingFramework.isColorEnabled() ? LogColor.translateAlternateCodes(formattedLine) : LogColor.strip(formattedLine);
+    }
 
     public static void log(@NonNull LogLevel level, @NonNull String name, @NonNull String message) {
         if (level == LogLevel.NONE) return;
