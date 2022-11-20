@@ -11,12 +11,8 @@ import java.util.stream.Collectors;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
-import xyz.e3ndr.fastloggingframework.loggerimpl.BukkitLogHandler;
-import xyz.e3ndr.fastloggingframework.loggerimpl.BungeeLogHandler;
-import xyz.e3ndr.fastloggingframework.loggerimpl.NukkitLogHandler;
 import xyz.e3ndr.fastloggingframework.loggerimpl.StaticLogHandler;
 import xyz.e3ndr.fastloggingframework.logging.LogLevel;
-import xyz.e3ndr.fastloggingframework.logging.StringUtil;
 
 public class FastLoggingFramework {
     private static @Getter @Setter @NonNull LogLevel defaultLevel = LogLevel.INFO;
@@ -29,14 +25,6 @@ public class FastLoggingFramework {
             try {
                 setupWindows();
             } catch (IOException | InterruptedException ignored) {}
-        }
-
-        if (StringUtil.classExists("org.bukkit.Bukkit")) {
-            new BukkitLogHandler();
-        } else if (StringUtil.classExists("cn.nukkit.Server")) {
-            new NukkitLogHandler();
-        } else if (StringUtil.classExists("net.md_5.bungee.api.ProxyServer")) {
-            new BungeeLogHandler();
         }
     }
 
