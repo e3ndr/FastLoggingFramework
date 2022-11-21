@@ -10,7 +10,9 @@ public class StaticLogHandler extends FastLogHandler {
 
     @Override
     protected void log(@NotNull String name, @NotNull LogLevel level, @NotNull String raw) {
-        System.out.println(LogColor.translateToAnsi(FastLogHandler.createFrontPorch(name, level, raw)));
+        System.out.print(LogColor.translateToAnsi(createFrontPorch(name, level)));
+        System.out.print(LogColor.translateToAnsi(raw));
+        System.out.println();
     }
 
 }
