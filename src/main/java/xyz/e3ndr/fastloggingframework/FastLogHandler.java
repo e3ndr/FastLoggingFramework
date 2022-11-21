@@ -20,32 +20,14 @@ import xyz.e3ndr.fastloggingframework.logging.LogLevel;
 public abstract class FastLogHandler {
     private static List<Message> messageCache = Collections.synchronizedList(new ArrayList<>());
 
-    private static Thread lockThread = new Thread();
-    private static Object lock = new Object();
-
-    private static synchronized void lock() {
-        if (!lockThread.isAlive()) {
-            lockThread = new Thread(() -> {
-                try {
-                    synchronized (lock) {
-                        // This ensures we never have a time gap.
-                        lock.notifyAll();
-
-                        lock.wait();
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            });
-
-            // Automatically kills the last lock.
-            lockThread.start();
-        }
-    }
+    private static boolean jvmHalting = false;
 
     static {
         Thread thread = new Thread(() -> {
-            while (true) {
+            // When the JVM begins shutdown, we set jvmHalting to true.
+            // This allows us to flush some final messages to console before the JVM
+            // terminates.
+            while (!jvmHalting) {
                 synchronized (messageCache) {
                     try {
                         messageCache.wait();
@@ -61,21 +43,31 @@ public abstract class FastLogHandler {
                         FastLoggingFramework.getLogHandler().log(message.name, message.level, line);
                     }
                 }
-
-                synchronized (lock) {
-                    lock.notifyAll();
-                }
             }
         });
 
         thread.setDaemon(true);
         thread.setName("FastLoggingFramework Logging Thread");
         thread.start();
+
+        Runtime
+            .getRuntime()
+            .addShutdownHook(new Thread(() -> {
+                try {
+                    log(LogLevel.TRACE, "FastLoggingFramework", "JVM shutdown started, flushing remaining messages.");
+
+                    jvmHalting = true;
+                    wake(); // We have to wake the thread here, otherwise it'll deadlock.
+                    thread.join();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }));
     }
 
     protected abstract void log(@NotNull String name, @NotNull LogLevel level, @NotNull String raw);
 
-    public static String createFrontPorch(@NotNull String name, @NotNull LogLevel level, @NotNull String raw) {
+    public static String createFrontPorch(@NotNull String name, @NotNull LogLevel level) {
         String formattedLine = String.format(
             "&r&7[%s&7] [%s&r&7]&r%s ",
             level.getPrettyString(),
@@ -89,9 +81,6 @@ public abstract class FastLogHandler {
     public static void log(@NonNull LogLevel level, @NonNull String name, @NonNull String message) {
         if (level == LogLevel.NONE) return;
 
-        // We use the lock thread to prevent the JVM from terminating while we're trying
-        // to log the last messages.
-        lock();
         messageCache.add(new Message(level, name, message.split("\n")));
         wake();
     }
