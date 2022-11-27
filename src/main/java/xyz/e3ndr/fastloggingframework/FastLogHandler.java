@@ -54,7 +54,9 @@ public abstract class FastLogHandler {
             .getRuntime()
             .addShutdownHook(new Thread(() -> {
                 try {
-                    log(LogLevel.TRACE, "FastLoggingFramework", "JVM shutdown started, flushing remaining messages.");
+                    if (LogLevel.TRACE.canLog(FastLoggingFramework.getDefaultLevel())) {
+                        log(LogLevel.TRACE, "FastLoggingFramework", "JVM shutdown started, flushing remaining messages.");
+                    }
 
                     jvmHalting = true;
                     wake(); // We have to wake the thread here, otherwise it'll deadlock.
