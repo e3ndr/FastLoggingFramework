@@ -77,7 +77,7 @@ public abstract class FastLogHandler {
             level.getTextColor()
         );
 
-        return FastLoggingFramework.isColorEnabled() ? LogColor.translateAlternateCodes(formattedLine) : LogColor.strip(formattedLine);
+        return LogColor.translateAlternateCodes(formattedLine);
     }
 
     public static void log(@NonNull LogLevel level, @NonNull String name, @NonNull String message) {
