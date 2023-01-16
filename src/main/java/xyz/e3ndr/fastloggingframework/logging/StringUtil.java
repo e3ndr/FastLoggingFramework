@@ -64,16 +64,6 @@ public class StringUtil {
         return className[className.length - 1].replace("$", ".");
     }
 
-    public static boolean classExists(String name) {
-        try {
-            Class.forName(name);
-
-            return true;
-        } catch (Exception e) {
-            return false;
-        }
-    }
-
     public static String getExceptionStack(@NonNull Throwable e) {
         StringWriter sw = new StringWriter();
         PrintWriter pw = new PrintWriter(sw);

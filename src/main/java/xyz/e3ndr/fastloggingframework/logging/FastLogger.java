@@ -7,8 +7,8 @@ import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
 import lombok.experimental.Accessors;
-import xyz.e3ndr.fastloggingframework.FastLoggingFramework;
 import xyz.e3ndr.fastloggingframework.FastLogHandler;
+import xyz.e3ndr.fastloggingframework.FastLoggingFramework;
 
 @Accessors(chain = true)
 public class FastLogger {
@@ -46,7 +46,7 @@ public class FastLogger {
 
     public FastLogger log(@NonNull LogLevel level, @Nullable Object object, @Nullable Object... args) {
         if (level.canLog(this.currentLevel)) {
-            FastLogHandler.log(level, this.name, StringUtil.parseFormat(object, args));
+            FastLogHandler.log(level, this.name, object, args);
         }
 
         return this;
@@ -106,19 +106,19 @@ public class FastLogger {
 
     public static void logException(@Nullable Throwable e) {
         if (LogLevel.SEVERE.canLog(FastLoggingFramework.getDefaultLevel())) {
-            FastLogHandler.log(LogLevel.SEVERE, StringUtil.getCallingClass(), StringUtil.parseFormat(e));
+            FastLogHandler.log(LogLevel.SEVERE, StringUtil.getCallingClass(), e);
         }
     }
 
     public static void logStatic(@Nullable Object object, @Nullable Object... args) {
         if (LogLevel.INFO.canLog(FastLoggingFramework.getDefaultLevel())) {
-            FastLogHandler.log(LogLevel.INFO, StringUtil.getCallingClass(), StringUtil.parseFormat(object, args));
+            FastLogHandler.log(LogLevel.INFO, StringUtil.getCallingClass(), object, args);
         }
     }
 
     public static void logStatic(@NonNull LogLevel level, @Nullable Object object, @Nullable Object... args) {
         if (level.canLog(FastLoggingFramework.getDefaultLevel())) {
-            FastLogHandler.log(level, StringUtil.getCallingClass(), StringUtil.parseFormat(object, args));
+            FastLogHandler.log(level, StringUtil.getCallingClass(), object, args);
         }
     }
 

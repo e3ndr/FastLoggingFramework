@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.List;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -13,6 +14,7 @@ import lombok.Setter;
 import lombok.experimental.Accessors;
 import xyz.e3ndr.fastloggingframework.logging.LogColor;
 import xyz.e3ndr.fastloggingframework.logging.LogLevel;
+import xyz.e3ndr.fastloggingframework.logging.StringUtil;
 
 @Getter
 @Setter
@@ -37,10 +39,16 @@ public abstract class FastLogHandler {
                 }
 
                 while (!messageCache.isEmpty()) {
-                    Message message = messageCache.remove(0);
+                    try {
+                        Message message = messageCache.remove(0);
 
-                    for (String line : message.lines) {
-                        FastLoggingFramework.getLogHandler().log(message.name, message.level, line);
+                        String messageText = StringUtil.parseFormat(message.object, message.args);
+
+                        for (String line : messageText.split("\n")) {
+                            FastLoggingFramework.getLogHandler().log(message.name, message.level, line);
+                        }
+                    } catch (Throwable t) {
+                        t.printStackTrace();
                     }
                 }
             }
@@ -80,10 +88,10 @@ public abstract class FastLogHandler {
         return LogColor.translateAlternateCodes(formattedLine);
     }
 
-    public static void log(@NonNull LogLevel level, @NonNull String name, @NonNull String message) {
+    public static void log(@NonNull LogLevel level, @NonNull String name, @Nullable Object object, @Nullable Object... args) {
         if (level == LogLevel.NONE) return;
 
-        messageCache.add(new Message(level, name, message.split("\n")));
+        messageCache.add(new Message(level, name, object, args));
         wake();
     }
 
@@ -91,7 +99,9 @@ public abstract class FastLogHandler {
     private static class Message {
         private LogLevel level;
         private String name;
-        private String[] lines;
+
+        private @Nullable Object object;
+        private @Nullable Object[] args;
 
     }
 
