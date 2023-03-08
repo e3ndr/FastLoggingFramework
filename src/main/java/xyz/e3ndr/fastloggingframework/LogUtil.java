@@ -1,4 +1,4 @@
-package xyz.e3ndr.fastloggingframework.logging;
+package xyz.e3ndr.fastloggingframework;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -9,7 +9,7 @@ import org.jetbrains.annotations.Nullable;
 import lombok.NonNull;
 import lombok.SneakyThrows;
 
-public class StringUtil {
+public class LogUtil {
 
     public static String parseFormat(@Nullable Object object, @Nullable Object... args) {
         if (object == null) {

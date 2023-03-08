@@ -14,7 +14,6 @@ import lombok.Setter;
 import lombok.experimental.Accessors;
 import xyz.e3ndr.fastloggingframework.logging.LogColor;
 import xyz.e3ndr.fastloggingframework.logging.LogLevel;
-import xyz.e3ndr.fastloggingframework.logging.StringUtil;
 
 @Getter
 @Setter
@@ -42,7 +41,7 @@ public abstract class FastLogHandler {
                     try {
                         Message message = messageCache.remove(0);
 
-                        String messageText = StringUtil.parseFormat(message.object, message.args);
+                        String messageText = LogUtil.parseFormat(message.object, message.args);
 
                         for (String line : messageText.split("\n")) {
                             FastLoggingFramework.getLogHandler().log(message.name, message.level, line);
