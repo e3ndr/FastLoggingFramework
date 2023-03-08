@@ -20,24 +20,23 @@ public class LogUtil {
             return arrayAsString(object);
         } else if ((args == null) || (args.length == 0)) {
             return String.valueOf(object);
-        } else {
-            // Loop through the args and...
-            // - replace Throwables with their stacktraces
-            // - replace Arrays with their toString versions.
-            for (int argIndex = 0; argIndex < args.length; argIndex++) {
-                Object arg = args[argIndex];
-
-                if (arg != null) {
-                    if (arg instanceof Throwable) {
-                        args[argIndex] = getExceptionStack((Throwable) arg);
-                    } else if (arg.getClass().isArray()) {
-                        args[argIndex] = arrayAsString(arg);
-                    }
-                }
-            }
-
-            return String.format(String.valueOf(object), args);
         }
+
+        // Loop through the args and...
+        // - replace Throwables with their stacktraces
+        // - replace Arrays with their toString versions.
+        for (int argIndex = 0; argIndex < args.length; argIndex++) {
+            Object arg = args[argIndex];
+            if (arg == null) continue;
+
+            if (arg instanceof Throwable) {
+                args[argIndex] = getExceptionStack((Throwable) arg);
+            } else if (arg.getClass().isArray()) {
+                args[argIndex] = arrayAsString(arg);
+            }
+        }
+
+        return String.format(String.valueOf(object), args);
     }
 
     public static String arrayAsString(@NonNull Object array) {
