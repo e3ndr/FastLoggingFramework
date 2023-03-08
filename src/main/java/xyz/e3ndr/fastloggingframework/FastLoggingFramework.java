@@ -15,10 +15,10 @@ import xyz.e3ndr.fastloggingframework.loggerimpl.StaticLogHandler;
 import xyz.e3ndr.fastloggingframework.logging.LogLevel;
 
 public class FastLoggingFramework {
-    private static @Getter @Setter @NonNull LogLevel defaultLevel = LogLevel.INFO;
+    private static @Getter @Setter @NonNull LogLevel defaultLevel = LogLevel.valueOf(System.getProperty("fastloggingframework.defaultlevel", "INFO"));
     private static @Getter @NonNull FastLogHandler logHandler = new StaticLogHandler();
 
-    private static @Getter @Setter boolean colorEnabled = true;
+    private static @Getter @Setter boolean colorEnabled = System.getProperty("fastloggingframework.colorenabled", "true").equalsIgnoreCase("true");
 
     static {
         if (System.getProperty("os.name", "").contains("Windows")) {
