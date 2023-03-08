@@ -35,7 +35,7 @@ public class FastLoggingFramework {
     private static void setupWindows() throws IOException, InterruptedException {
         String script = new BufferedReader(
             new InputStreamReader(
-                FastLoggingFramework.class.getResourceAsStream("/windows_setup.ps1")
+                FastLoggingFramework.class.getResourceAsStream("/xyz/e3ndr/fastloggingframework/windows_setup.ps1")
             )
         )
             .lines()
