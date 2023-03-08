@@ -27,9 +27,10 @@ public class LogUtil {
         // - replace Arrays with their toString versions.
         for (int argIndex = 0; argIndex < args.length; argIndex++) {
             Object arg = args[argIndex];
-            if (arg == null) continue;
 
-            if (arg instanceof Throwable) {
+            if (arg == null) {
+                continue;
+            } else if (arg instanceof Throwable) {
                 args[argIndex] = getExceptionStack((Throwable) arg);
             } else if (arg.getClass().isArray()) {
                 args[argIndex] = arrayAsString(arg);
@@ -45,7 +46,6 @@ public class LogUtil {
 
         for (int idx = 0; idx < arrLen; idx++) {
             Object o = Array.get(array, idx);
-
             asString[idx] = String.valueOf(o);
         }
 

@@ -70,37 +70,40 @@ public enum LogColor {
 
     public static String translateToAnsi(String str) {
         for (LogColor color : values()) {
-            str = str.replace(color.toString(), color.ansiColor).replace(color.toString().toUpperCase(), color.ansiColor);
+            str = str
+                .replace(color.toString(), color.ansiColor)
+                .replace(color.toString().toUpperCase(), color.ansiColor);
         }
-
         return str;
     }
 
     public static String translateAlternateCodes(String str) {
         for (LogColor color : values()) {
-            str = str.replace('&' + color.colorCode, color.toString());
+            str = str
+                .replace('&' + color.colorCode, color.toString());
+        }
+        return str;
+    }
+
+    public static String strip(String str) {
+        for (LogColor color : values()) {
+            str = str
+                .replace('&' + color.colorCode, color.toString())
+                .replace(color.toString(), "")
+                .replace(color.ansiColor, "");
         }
 
         return str;
     }
 
-    public static String strip(String str) {
-        String result = str;
-
-        for (LogColor color : values()) {
-            result = result.replace('&' + color.colorCode, color.toString()).replace(color.toString(), "").replace(color.ansiColor, "");
-        }
-
-        return result;
-    }
-
     public static LogColor getColor(String code) {
         for (LogColor color : values()) {
-            if (color.toString().equalsIgnoreCase(code) || color.name().equalsIgnoreCase(code) || color.getColorCode().equalsIgnoreCase(code)) {
+            if (color.toString().equalsIgnoreCase(code) ||
+                color.name().equalsIgnoreCase(code) ||
+                color.getColorCode().equalsIgnoreCase(code)) {
                 return color;
             }
         }
-
         return null;
     }
 
