@@ -4,15 +4,14 @@ import org.jetbrains.annotations.Nullable;
 
 import lombok.Getter;
 import lombok.NonNull;
-import lombok.Setter;
-import lombok.experimental.Accessors;
 import xyz.e3ndr.fastloggingframework.FastLogHandler;
 import xyz.e3ndr.fastloggingframework.FastLoggingFramework;
 
-@Accessors(chain = true)
 public class FastLogger {
-    private @Getter @Setter LogLevel currentLevel;
+    private @Getter @Nullable LogLevel currentLevel;
     private @Getter String name;
+
+    private @Getter @Nullable FastLogger parentLogger = null;
 
     public FastLogger() {
         this(StringUtil.getCallingClass());
@@ -27,12 +26,57 @@ public class FastLogger {
         this.currentLevel = FastLoggingFramework.getDefaultLevel();
     }
 
+    /**
+     * @param  newLevel the new level to use, can be null IF this is a child
+     *                  instance.
+     * 
+     * @return          this instance, for chaining.
+     */
+    public FastLogger setCurrentLevel(LogLevel newLevel) {
+        if (newLevel == null && this.parentLogger == null) {
+            throw new IllegalArgumentException("newLevel cannot be null unless there is a parent logger present.");
+        }
+        this.currentLevel = newLevel;
+        return this;
+    }
+
+    /* -------------- */
+    /* Parent/Child   */
+    /* -------------- */
+
+    public boolean isChild() {
+        return this.parentLogger != null;
+    }
+
+    /**
+     * 
+     * @param  childName the name of the child logger.
+     * 
+     * @return           a new child instance, with it's level automatically tied to
+     *                   the parent.
+     */
+    public FastLogger createChild(@NonNull String childName) {
+        FastLogger child = new FastLogger(String.format("%s / %s", this.name, childName));
+        child.parentLogger = this;
+        child.currentLevel = null;
+        return child;
+    }
+
     /* -------------- */
     /* Logging        */
     /* -------------- */
 
+    public boolean canLog(@NonNull LogLevel toCheck) {
+        // If we're a child and our level is null then we need to check
+        // with the parent instead.
+        if (this.isChild() && (this.currentLevel == null)) {
+            return this.parentLogger.canLog(toCheck);
+        }
+        return toCheck.canLog(this.currentLevel);
+    }
+
     public FastLogger log(@NonNull LogLevel level, @Nullable Object object, @Nullable Object... args) {
-        if (level.canLog(this.currentLevel)) {
+        if (this.canLog(level)) {
             FastLogHandler.log(level, this.name, object, args);
         }
 
