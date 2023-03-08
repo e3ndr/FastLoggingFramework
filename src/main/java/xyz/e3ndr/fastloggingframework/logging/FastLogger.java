@@ -1,6 +1,5 @@
 package xyz.e3ndr.fastloggingframework.logging;
 
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import lombok.Getter;
@@ -16,28 +15,16 @@ public class FastLogger {
     private @Getter String name;
 
     public FastLogger() {
-        this(StringUtil.getCallingClass(), FastLoggingFramework.getDefaultLevel());
+        this(StringUtil.getCallingClass());
     }
 
     public FastLogger(@NonNull Class<?> clazz) {
-        this(clazz, FastLoggingFramework.getDefaultLevel());
+        this(clazz.getSimpleName());
     }
 
     public FastLogger(@NonNull String name) {
-        this(name, FastLoggingFramework.getDefaultLevel());
-    }
-
-    public FastLogger(@NonNull LogLevel level) {
-        this(StringUtil.getCallingClass(), level);
-    }
-
-    public FastLogger(@NotNull Class<?> clazz, @NonNull LogLevel level) {
-        this(clazz.getSimpleName(), level);
-    }
-
-    public FastLogger(@NonNull String name, @NonNull LogLevel level) {
-        this.currentLevel = level;
         this.name = name;
+        this.currentLevel = FastLoggingFramework.getDefaultLevel();
     }
 
     /* -------------- */
