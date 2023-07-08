@@ -3,6 +3,7 @@ package xyz.e3ndr.fastloggingframework;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.PrintStream;
 import java.lang.ProcessBuilder.Redirect;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
@@ -32,6 +33,11 @@ public class FastLoggingFramework {
             logHandler = new QuietLogHandler();
         } else {
             logHandler = new StaticLogHandler();
+
+            if ("true".equalsIgnoreCase(System.getProperty("fastloggingframework.wrapsystem", "true"))) {
+                System.setOut(new PrintStream(new OutputStreamToFLF(LogLevel.INFO)));
+                System.setErr(new PrintStream(new OutputStreamToFLF(LogLevel.SEVERE)));
+            }
         }
     }
 
