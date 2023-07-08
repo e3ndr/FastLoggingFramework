@@ -1,5 +1,7 @@
 package xyz.e3ndr.fastloggingframework.loggerimpl;
 
+import java.io.PrintStream;
+
 import org.jetbrains.annotations.NotNull;
 
 import xyz.e3ndr.fastloggingframework.FastLogHandler;
@@ -9,16 +11,22 @@ import xyz.e3ndr.fastloggingframework.logging.LogLevel;
 
 public class StaticLogHandler extends FastLogHandler {
 
+    /**
+     * Normally just System.out, you can replace this with any {@link PrintStream}
+     * that implements print(String) and println(String) and println().
+     */
+    public static PrintStream targetOut = System.out;
+
     @Override
     protected void log(@NotNull String name, @NotNull LogLevel level, @NotNull String raw) {
         if (FastLoggingFramework.isColorEnabled()) {
-            System.out.print(LogColor.translateToAnsi(createFrontPorch(name, level)));
-            System.out.print(LogColor.translateToAnsi(raw));
-            System.out.println(LogColor.DEFAULT.getAnsiColor());
+            targetOut.print(LogColor.translateToAnsi(createFrontPorch(name, level)));
+            targetOut.print(LogColor.translateToAnsi(raw));
+            targetOut.println(LogColor.DEFAULT.getAnsiColor());
         } else {
-            System.out.print(LogColor.strip(createFrontPorch(name, level)));
-            System.out.print(LogColor.strip(raw));
-            System.out.println();
+            targetOut.print(LogColor.strip(createFrontPorch(name, level)));
+            targetOut.print(LogColor.strip(raw));
+            targetOut.println();
         }
     }
 
