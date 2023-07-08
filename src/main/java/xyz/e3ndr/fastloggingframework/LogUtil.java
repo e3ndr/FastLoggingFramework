@@ -53,12 +53,31 @@ public class LogUtil {
     }
 
     @SneakyThrows
-    public static String getCallingClass() {
-        String[] className = Thread.currentThread()
-            .getStackTrace()[3]
-                .getClassName()
-                .split("\\.");
+    public static String getCallerFromStack(String... filter) {
+        StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
 
+        // We have to start at 1 because we do enter the Thread class in the stack.
+        for (int idx = 1; idx < stackTrace.length; idx++) {
+            String stackName = stackTrace[idx].getClassName();
+
+            boolean shouldIgnore = false;
+            for (String filterPackage : filter) {
+                if (stackName.startsWith(filterPackage)) {
+                    shouldIgnore = true;
+                    break;
+                }
+            }
+            if (shouldIgnore) continue;
+
+            return stackName;
+        }
+
+        return "<unknown>";
+    }
+
+    @SneakyThrows
+    public static String stackNameToClassName(String stackName) {
+        String[] className = stackName.split("\\.");
         // We then format subclasses with a . instead of $.
         return className[className.length - 1].replace("$", ".");
     }

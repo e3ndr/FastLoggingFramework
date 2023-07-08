@@ -9,13 +9,21 @@ import xyz.e3ndr.fastloggingframework.FastLoggingFramework;
 import xyz.e3ndr.fastloggingframework.LogUtil;
 
 public class FastLogger {
+    private static final String[] FILTER = {
+            "xyz.e3ndr.fastloggingframework."
+    };
+
     private @Getter @Nullable LogLevel currentLevel;
     private @Getter String name;
 
     private @Getter @Nullable FastLogger parentLogger = null;
 
     public FastLogger() {
-        this(LogUtil.getCallingClass());
+        this(
+            LogUtil.stackNameToClassName(
+                LogUtil.getCallerFromStack(FILTER)
+            )
+        );
     }
 
     public FastLogger(@NonNull Class<?> clazz) {
@@ -138,19 +146,25 @@ public class FastLogger {
 
     public static void logException(@Nullable Throwable e) {
         if (LogLevel.SEVERE.canLog(FastLoggingFramework.getDefaultLevel())) {
-            FastLogHandler.log(LogLevel.SEVERE, LogUtil.getCallingClass(), e);
+            String stackName = LogUtil.getCallerFromStack(FILTER);
+            String className = LogUtil.stackNameToClassName(stackName);
+            FastLogHandler.log(LogLevel.SEVERE, className, e);
         }
     }
 
     public static void logStatic(@Nullable Object object, @Nullable Object... args) {
         if (LogLevel.INFO.canLog(FastLoggingFramework.getDefaultLevel())) {
-            FastLogHandler.log(LogLevel.INFO, LogUtil.getCallingClass(), object, args);
+            String stackName = LogUtil.getCallerFromStack(FILTER);
+            String className = LogUtil.stackNameToClassName(stackName);
+            FastLogHandler.log(LogLevel.INFO, className, object, args);
         }
     }
 
     public static void logStatic(@NonNull LogLevel level, @Nullable Object object, @Nullable Object... args) {
         if (level.canLog(FastLoggingFramework.getDefaultLevel())) {
-            FastLogHandler.log(level, LogUtil.getCallingClass(), object, args);
+            String stackName = LogUtil.getCallerFromStack(FILTER);
+            String className = LogUtil.stackNameToClassName(stackName);
+            FastLogHandler.log(level, className, object, args);
         }
     }
 
