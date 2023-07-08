@@ -11,12 +11,13 @@ import java.util.stream.Collectors;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
+import xyz.e3ndr.fastloggingframework.loggerimpl.QuietLogHandler;
 import xyz.e3ndr.fastloggingframework.loggerimpl.StaticLogHandler;
 import xyz.e3ndr.fastloggingframework.logging.LogLevel;
 
 public class FastLoggingFramework {
     private static @Getter @Setter @NonNull LogLevel defaultLevel = LogLevel.valueOf(System.getProperty("fastloggingframework.defaultlevel", "INFO"));
-    private static @Getter @NonNull FastLogHandler logHandler = new StaticLogHandler();
+    private static @Getter @NonNull FastLogHandler logHandler;
 
     private static @Getter @Setter boolean colorEnabled = System.getProperty("fastloggingframework.colorenabled", "true").equalsIgnoreCase("true");
 
@@ -25,6 +26,12 @@ public class FastLoggingFramework {
             try {
                 setupWindows();
             } catch (IOException | InterruptedException ignored) {}
+        }
+
+        if ("true".equalsIgnoreCase(System.getProperty("fastloggingframework.bequiet"))) {
+            logHandler = new QuietLogHandler();
+        } else {
+            logHandler = new StaticLogHandler();
         }
     }
 
