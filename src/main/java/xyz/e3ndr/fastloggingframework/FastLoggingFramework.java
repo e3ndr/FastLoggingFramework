@@ -34,7 +34,7 @@ public class FastLoggingFramework {
         } else {
             logHandler = new StaticLogHandler();
 
-            if ("true".equalsIgnoreCase(System.getProperty("fastloggingframework.wrapsystem", "true"))) {
+            if ("true".equalsIgnoreCase(System.getProperty("fastloggingframework.wrapsystem", "false"))) {
                 System.setOut(new PrintStream(new OutputStreamToFLF(LogLevel.INFO)));
                 System.setErr(new PrintStream(new OutputStreamToFLF(LogLevel.SEVERE)));
             }
