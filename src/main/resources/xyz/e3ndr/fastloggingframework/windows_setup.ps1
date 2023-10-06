@@ -34,5 +34,5 @@ if ($ret -eq 0) {
 
 $ret = $WinAPI::SetConsoleMode($handle, $mode -bor $WinAPI::ENABLE_VIRTUAL_TERMINAL_PROCESSING)
 if ($ret -eq 0) {
-    throw "GetConsoleMode failed (is stdin a console?)"
+    throw "SetConsoleMode failed (is stdin a console?)"
 }
