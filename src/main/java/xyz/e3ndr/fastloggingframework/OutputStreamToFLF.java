@@ -49,7 +49,6 @@ public class OutputStreamToFLF extends OutputStream {
         }
 
         builder.append((char) b);
-
     }
 
 }
