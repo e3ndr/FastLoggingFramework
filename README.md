@@ -50,7 +50,7 @@ log.exception(new Exception());
         <dependency>
             <groupId>com.github.e3ndr</groupId>
             <artifactId>FastLoggingFramework</artifactId>
-            <version>1.7.0</version>
+            <version>VERSION</version>
             <scope>compile</scope>
         </dependency>
     </dependencies>
